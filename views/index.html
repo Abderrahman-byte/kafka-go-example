@@ -1,1 +1,22 @@
 <h1 class="mb-3">{{title}}</h1>
+
+<div class="d-flex flex-column justify-content-between">
+    <div class="messages-container border p-3 mb-2" id="messages-container" style="height: 80vh; overflow-y: auto;">
+    </div>
+
+    <div class="p-3 w-100 ">
+        <form>
+            <div class="row">
+                <div class="col">
+                    <input class="form-control" name="message" id="message-input" type="text"
+                        placeholder="Send message" />
+                </div>
+                <div class="col">
+                    <button class="btn btn-primary">Send</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="/static/index.js"></script>

@@ -1,24 +1,63 @@
 const ws = new WebSocket("ws://localhost:3000/ws")
 
-const appendMessage = (message, tag = "info") => {
-    const elt = document.createElement("div")
-    const p = document.createElement("p")
+const appendMessage = (from, message) => {
+    const html = `<div class="alert alert-primary mb-2">
+            <div class="d-flex align-items-center justify-content-between">
+                <h6 class="fw-bold">@${from}</h6>
+                <span class="text-muted"></span>
+            </div>
+            <span>${message}</span>
+        </div>`
 
-    p.textContent = message
-    elt.className = "alert alert-" + tag +" mb-2"
-    elt.appendChild(p)
+    document.getElementById("messages-container").innerHTML += html
+}
 
-    document.getElementById("messages").appendChild(elt)
+const appendNotification = (message) => {
+    const html = `<div class="alert alert-secondary mb-2">
+        <div class="card-body">
+            <div class="d-flex align-items-center justify-content-between">
+                <span>${message}</span>
+                <span class="text-muted"></span>
+            </div>
+        </div>
+    </div>`
+
+    document.getElementById("messages-container").innerHTML += html
+}
+
+const appendError = (message) => {
+    const html = `<div class="alert alert-danger mb-2">
+        <div class="card-body">
+            <div class="d-flex align-items-center justify-content-between">
+                <span>${message}</span>
+                <span class="text-muted"></span>
+            </div>
+        </div>
+    </div>`
+
+    document.getElementById("messages-container").innerHTML += html
+}
+
+ws.onopen = () => {
+    console.log("connection opened")
+}
+
+ws.onerror = (e) => {
+    appendError("Something went wrong")
+}
+
+ws.onclose = () => {
+    appendError("Connection closed")
 }
 
 ws.onmessage = (e) => {
-    appendMessage(e.data, "info")
-}
+    const msg = JSON.parse(e.data)
 
-ws.onopen = e => {
-    appendMessage("Connection opened", "success")
-}
+    if (msg.type === "message") {
+        appendMessage(msg.from, msg.content)
+    } else if (msg.type === "notification") {
+        appendNotification(msg.content)
+    }
 
-ws.onclose = e => {
-    appendMessage("Connection closed", "danger")
+    document.getElementById("messages-container").scrollTo(0, document.body.scrollHeight);
 }
