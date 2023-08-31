@@ -61,3 +61,14 @@ ws.onmessage = (e) => {
 
     document.getElementById("messages-container").scrollTo(0, document.body.scrollHeight);
 }
+
+
+document.getElementById("message-form").addEventListener("submit", e => {
+    e.preventDefault()
+
+    const msg = document.getElementById("message-input").value
+
+    ws.send(msg)
+
+    document.getElementById("message-input").value = ""
+})
