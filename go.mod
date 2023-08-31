@@ -7,6 +7,7 @@ require (
 	github.com/gofiber/contrib/websocket v1.2.0
 	github.com/gofiber/fiber/v2 v2.48.0
 	github.com/gofiber/template/django/v3 v3.1.5
+	github.com/mattn/go-sqlite3 v1.14.14
 )
 
 require (
