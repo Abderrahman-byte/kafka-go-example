@@ -20,6 +20,13 @@ services:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_INTERNAL:PLAINTEXT
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-1:9092,PLAINTEXT_INTERNAL://localhost:19092
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 2
+    volumes:
+      - ./scripts:/scripts
+    command: >
+      bash -c "
+      /scripts/create-topic.sh &
+      /etc/confluent/docker/run
+      "
   kafka-2:
     image: confluentinc/cp-kafka:latest
     ports:
@@ -44,3 +51,11 @@ services:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_INTERNAL:PLAINTEXT
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-3:9092,PLAINTEXT_INTERNAL://localhost:39092
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 2
+  app:
+    build: ./
+    depends_on:
+      - kafka-1
+    ports:
+      - "3000:3000"
+    environment:
+      KAFKA: 'kafka-1:9092'
